@@ -1,0 +1,80 @@
+<?php
+session_start();
+require_once '../config/database.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login.php');
+    exit;
+}
+
+$atletas = $pdo->query("SELECT * FROM users")->fetchAll();
+$reservas = $pdo->query("SELECT r.*, c.tipo_campo, u.nome FROM reservas r JOIN campos c ON r.id_campo = c.id JOIN users u ON r.id_user = u.id ORDER BY r.data_hora DESC")->fetchAll();
+$campos = $pdo->query("SELECT * FROM campos")->fetchAll();
+$pagamentos = $pdo->query("SELECT p.*, u.nome FROM pagamentos p JOIN users u ON p.id_user = u.id")->fetchAll();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['add_campo'])) {
+        $tipo = $_POST['tipo_campo'];
+        $estado = $_POST['estado'];
+        $valor = $_POST['valor'];
+        $stmt = $pdo->prepare("INSERT INTO campos (tipo_campo, estado, valor) VALUES (?, ?, ?)");
+        $stmt->execute([$tipo, $estado, $valor]);
+        header('Location: dashboard.php');
+        exit;
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="../index.php">Inicio</a>
+        <a href="dashboard.php">Dashboard</a>
+        <a href="stats.php">Estatisticas</a>
+        <a href="../logout.php">Logout</a>
+    </nav>
+    <div class="container">
+        <h2>Painel de Administracao</h2>
+
+        <h3>Adicionar Campo</h3>
+        <form method="POST">
+            <input type="text" name="tipo_campo" placeholder="Tipo de campo" required>
+            <select name="estado">
+                <option value="disponivel">Disponivel</option>
+                <option value="manutencao">Manutencao</option>
+            </select>
+            <input type="number" name="valor" placeholder="Valor/hora (€)" step="0.01" required>
+            <button type="submit" name="add_campo">Adicionar Campo</button>
+        </form>
+
+        <h3>Atletas</h3>
+        <table>
+            <tr><th>Nome</th><th>Email</th></tr>
+            <?php foreach ($atletas as $a): ?>
+            <tr><td><?= $a['nome'] ?></td><td><?= $a['email'] ?></td></tr>
+            <?php endforeach; ?>
+        </table>
+
+        <h3>Reservas</h3>
+        <table>
+            <tr><th>Atleta</th><th>Campo</th><th>Data</th><th>Estado</th></tr>
+            <?php foreach ($reservas as $r): ?>
+            <tr><td><?= $r['nome'] ?></td><td><?= $r['tipo_campo'] ?></td><td><?= $r['data_hora'] ?></td><td><?= $r['estado'] ?></td></tr>
+            <?php endforeach; ?>
+        </table>
+
+        <h3>Pagamentos</h3>
+        <table>
+            <tr><th>Atleta</th><th>Montante</th><th>Data</th></tr>
+            <?php foreach ($pagamentos as $p): ?>
+            <tr><td><?= $p['nome'] ?></td><td><?= $p['montante'] ?>€</td><td><?= $p['data'] ?></td></tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</body>
+</html>
