@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/database.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] != 'gestor' && $_SESSION['user_role'] != 'rececionista')) {
     header('Location: ../login.php');
     exit;
 }
@@ -23,7 +23,6 @@ $historico_atletas = $pdo->query("SELECT u.nome, COUNT(r.id) as total_reservas F
 
 <body>
     <nav>
-        <a href="../index.php">Inicio</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="stats.php">Estatisticas</a>
         <a href="../logout.php">Sair</a>

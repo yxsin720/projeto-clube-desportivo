@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] == 'gestor' || $_SESSION['user_role'] == 'rececionista')) {
+    header('Location: admin/dashboard.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -36,7 +41,6 @@ session_start();
             <a href="reservas.php"><button>Fazer Reserva</button></a>
         <?php endif; ?>
     </div>
-
     <div class="container">
         <div class="cards">
             <div class="card">

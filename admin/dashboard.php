@@ -59,10 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <body>
     <nav>
-        <a href="../index.php">Inicio</a>
         <a href="dashboard.php">Dashboard</a>
         <a href="stats.php">Estatisticas</a>
-        <a href="../logout.php">Logout</a>
+        <a href="../logout.php">Sair</a>
     </nav>
     <div class="container">
         <h2>Painel de Administracao</h2>
@@ -122,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <td><?= $r['check_in'] ? 'Sim' : 'Nao' ?></td>
                     <td>
                         <?php if ($r['estado'] == 'ativa' && !$r['check_in']): ?>
-                            <form method="POST">
+                            <form method="POST" style="display:inline">
                                 <input type="hidden" name="id_reserva" value="<?= $r['id'] ?>">
                                 <button type="submit" name="checkin">Check-in</button>
                             </form>
