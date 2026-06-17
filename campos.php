@@ -34,14 +34,20 @@ $campos = $stmt->fetchAll();
         <table>
             <tr>
                 <th>Tipo</th>
+                <th>Descricao</th>
                 <th>Estado</th>
                 <th>Valor/hora</th>
+                <th>Iluminacao</th>
+                <th>Aluguer Material</th>
             </tr>
             <?php foreach ($campos as $campo): ?>
                 <tr>
                     <td><?= $campo['tipo_campo'] ?></td>
+                    <td><?= $campo['descricao'] ?></td>
                     <td><?= $campo['estado'] ?></td>
                     <td><?= $campo['valor'] ?>€</td>
+                    <td><?= $campo['custo_iluminacao'] ?>€</td>
+                    <td><?= $campo['custo_aluguer_material'] ?>€</td>
                 </tr>
             <?php endforeach; ?>
         </table>
