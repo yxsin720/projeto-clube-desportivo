@@ -7,11 +7,10 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$ocupacao = $pdo->query("SELECT data_hora, COUNT(*) as total FROM reservas GROUP BY data_hora")->fetchAll();
-
+$ocupacao = $pdo->query("SELECT data_hora, COUNT(*) as total FROM reservas GROUP BY data_hora ORDER BY data_hora DESC")->fetchAll();
 $estado_reservas = $pdo->query("SELECT estado, COUNT(*) as total FROM reservas GROUP BY estado")->fetchAll();
-
 $receita = $pdo->query("SELECT c.tipo_campo, SUM(p.montante) as total FROM pagamentos p JOIN reservas r ON p.id_reserva = r.id JOIN campos c ON r.id_campo = c.id GROUP BY c.tipo_campo")->fetchAll();
+$historico_atletas = $pdo->query("SELECT u.nome, COUNT(r.id) as total_reservas FROM users u LEFT JOIN reservas r ON u.id = r.id_user GROUP BY u.id, u.nome")->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -29,50 +28,65 @@ $receita = $pdo->query("SELECT c.tipo_campo, SUM(p.montante) as total FROM pagam
         <a href="stats.php">Estatisticas</a>
         <a href="../logout.php">Sair</a>
     </nav>
+    <div class="container">
+        <h1>Estatisticas</h1>
 
-    <h1>Estatisticas</h1>
-
-    <h2>Ocupacao por Dia</h2>
-    <table>
-        <tr>
-            <th>Data</th>
-            <th>Total Reservas</th>
-        </tr>
-        <?php foreach ($ocupacao as $linha): ?>
+        <h2>Ocupacao por Dia</h2>
+        <table>
             <tr>
-                <td><?php echo $linha['data_hora']; ?></td>
-                <td><?php echo $linha['total']; ?></td>
+                <th>Data</th>
+                <th>Total Reservas</th>
             </tr>
-        <?php endforeach; ?>
-    </table>
+            <?php foreach ($ocupacao as $linha): ?>
+                <tr>
+                    <td><?= $linha['data_hora'] ?></td>
+                    <td><?= $linha['total'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
 
-    <h2>Estado das Reservas</h2>
-    <table>
-        <tr>
-            <th>Estado</th>
-            <th>Total</th>
-        </tr>
-        <?php foreach ($estado_reservas as $linha): ?>
+        <h2>Estado das Reservas</h2>
+        <table>
             <tr>
-                <td><?php echo $linha['estado']; ?></td>
-                <td><?php echo $linha['total']; ?></td>
+                <th>Estado</th>
+                <th>Total</th>
             </tr>
-        <?php endforeach; ?>
-    </table>
+            <?php foreach ($estado_reservas as $linha): ?>
+                <tr>
+                    <td><?= $linha['estado'] ?></td>
+                    <td><?= $linha['total'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
 
-    <h2>Receita por Tipo de Campo</h2>
-    <table>
-        <tr>
-            <th>Tipo de Campo</th>
-            <th>Total Faturado</th>
-        </tr>
-        <?php foreach ($receita as $linha): ?>
+        <h2>Receita por Tipo de Campo</h2>
+        <table>
             <tr>
-                <td><?php echo $linha['tipo_campo']; ?></td>
-                <td><?php echo $linha['total']; ?> €</td>
+                <th>Tipo de Campo</th>
+                <th>Total Faturado</th>
             </tr>
-        <?php endforeach; ?>
-    </table>
+            <?php foreach ($receita as $linha): ?>
+                <tr>
+                    <td><?= $linha['tipo_campo'] ?></td>
+                    <td><?= $linha['total'] ?> €</td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+
+        <h2>Historico de Atletas</h2>
+        <table>
+            <tr>
+                <th>Atleta</th>
+                <th>Total de Reservas</th>
+            </tr>
+            <?php foreach ($historico_atletas as $linha): ?>
+                <tr>
+                    <td><?= $linha['nome'] ?></td>
+                    <td><?= $linha['total_reservas'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
 </body>
 
 </html>
