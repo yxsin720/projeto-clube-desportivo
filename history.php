@@ -8,19 +8,18 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $id_user = $_SESSION['user_id'];
-$stmt = $pdo->prepare("SELECT r.*, c.tipo_campo FROM reservas r JOIN campos c ON r.id_campo = c.id WHERE r.id_user = ? ORDER BY r.data_hora DESC");
+
+$stmt = $pdo->prepare("SELECT r.*, c.tipo_campo, (SELECT COUNT(*) FROM pagamentos p WHERE p.id_reserva = r.id) as pago FROM reservas r JOIN campos c ON r.id_campo = c.id WHERE r.id_user = ? ORDER BY r.data_hora DESC");
 $stmt->execute([$id_user]);
 $reservas = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
-
 <head>
     <meta charset="UTF-8">
     <title>Historico</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
     <nav>
         <a href="index.php">Inicio</a>
@@ -42,20 +41,21 @@ $reservas = $stmt->fetchAll();
                 <th>Estado</th>
                 <th>Iluminacao</th>
                 <th>Check-in</th>
+                <th>Pago</th>
             </tr>
             <?php foreach ($reservas as $r): ?>
-                <tr>
-                    <td><?= $r['tipo_campo'] ?></td>
-                    <td><?= $r['data_hora'] ?></td>
-                    <td><?= $r['hora_inicio'] ?></td>
-                    <td><?= $r['hora_fim'] ?></td>
-                    <td><?= $r['estado'] ?></td>
-                    <td><?= $r['iluminacao'] ? 'Sim' : 'Nao' ?></td>
-                    <td><?= $r['check_in'] ? 'Sim' : 'Nao' ?></td>
-                </tr>
+            <tr>
+                <td><?= $r['tipo_campo'] ?></td>
+                <td><?= $r['data_hora'] ?></td>
+                <td><?= $r['hora_inicio'] ?></td>
+                <td><?= $r['hora_fim'] ?></td>
+                <td><?= $r['estado'] ?></td>
+                <td><?= $r['iluminacao'] ? 'Sim' : 'Nao' ?></td>
+                <td><?= $r['check_in'] ? 'Sim' : 'Nao' ?></td>
+                <td><?= $r['pago'] > 0 ? 'Sim' : 'Nao' ?></td>
+            </tr>
             <?php endforeach; ?>
         </table>
     </div>
 </body>
-
 </html>
