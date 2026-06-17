@@ -15,11 +15,13 @@ $reservas = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Historico</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
         <a href="index.php">Inicio</a>
@@ -41,15 +43,16 @@ $reservas = $stmt->fetchAll();
                 <th>Estado</th>
             </tr>
             <?php foreach ($reservas as $r): ?>
-            <tr>
-                <td><?= $r['tipo_campo'] ?></td>
-                <td><?= $r['data_hora'] ?></td>
-                <td><?= $r['hora_inicio'] ?></td>
-                <td><?= $r['hora_fim'] ?></td>
-                <td><?= $r['estado'] ?></td>
-            </tr>
+                <tr>
+                    <td><?= $r['tipo_campo'] ?></td>
+                    <td><?= $r['data_hora'] ?></td>
+                    <td><?= $r['hora_inicio'] ?></td>
+                    <td><?= $r['hora_fim'] ?></td>
+                    <td><?= $r['estado'] ?></td>
+                </tr>
             <?php endforeach; ?>
         </table>
     </div>
 </body>
+
 </html>
