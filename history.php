@@ -8,7 +8,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $id_user = $_SESSION['user_id'];
-
 $stmt = $pdo->prepare("SELECT r.*, c.tipo_campo FROM reservas r JOIN campos c ON r.id_campo = c.id WHERE r.id_user = ? ORDER BY r.data_hora DESC");
 $stmt->execute([$id_user]);
 $reservas = $stmt->fetchAll();
@@ -41,6 +40,8 @@ $reservas = $stmt->fetchAll();
                 <th>Hora Inicio</th>
                 <th>Hora Fim</th>
                 <th>Estado</th>
+                <th>Iluminacao</th>
+                <th>Check-in</th>
             </tr>
             <?php foreach ($reservas as $r): ?>
                 <tr>
@@ -49,6 +50,8 @@ $reservas = $stmt->fetchAll();
                     <td><?= $r['hora_inicio'] ?></td>
                     <td><?= $r['hora_fim'] ?></td>
                     <td><?= $r['estado'] ?></td>
+                    <td><?= $r['iluminacao'] ? 'Sim' : 'Nao' ?></td>
+                    <td><?= $r['check_in'] ? 'Sim' : 'Nao' ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
