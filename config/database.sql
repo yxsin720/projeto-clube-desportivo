@@ -59,5 +59,5 @@ INSERT INTO campos (tipo_campo, estado, valor, descricao, custo_iluminacao, cust
 
 UPDATE campos SET estado = 'manutencao' WHERE tipo_campo = 'Padel Descoberto';
 
-INSERT INTO users (nome, email, password, role, estado) VALUES ('Rececionista', 'rececionista@clube.pt', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC3utsAFP9lJCpNaOMSW', 'rececionista', 'ativo');
-INSERT INTO users (nome, email, password, role, estado) VALUES ('Gestor', 'gestor@clube.pt', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC3utsAFP9lJCpNaOMSW', 'gestor', 'ativo');
+INSERT INTO users (nome, email, password, role, estado) VALUES ('Rececionista', 'rececionista@clube.pt', '$2y$10$35Ycf3gDEOC9ztoMOzu4Q.TvFuGgNC1siJgoLRSA4zKXMM2UsZifq', 'rececionista', 'ativo');
+INSERT INTO users (nome, email, password, role, estado) VALUES ('Gestor', 'gestor@clube.pt', '$2y$10$35Ycf3gDEOC9ztoMOzu4Q.TvFuGgNC1siJgoLRSA4zKXMM2UsZifq', 'gestor', 'ativo');
