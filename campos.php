@@ -31,26 +31,29 @@ $campos = $stmt->fetchAll();
     </nav>
     <div class="container">
         <h2>Campos Disponiveis</h2>
-        <table>
-            <tr>
-                <th>Tipo</th>
-                <th>Descricao</th>
-                <th>Estado</th>
-                <th>Valor/hora</th>
-                <th>Iluminacao</th>
-                <th>Aluguer Material</th>
-            </tr>
+        <div class="cards">
             <?php foreach ($campos as $campo): ?>
-                <tr>
-                    <td><?= $campo['tipo_campo'] ?></td>
-                    <td><?= $campo['descricao'] ?></td>
-                    <td><?= $campo['estado'] ?></td>
-                    <td><?= $campo['valor'] ?>€</td>
-                    <td><?= $campo['custo_iluminacao'] ?>€</td>
-                    <td><?= $campo['custo_aluguer_material'] ?>€</td>
-                </tr>
+                <div class="card <?= $campo['estado'] == 'manutencao' ? 'card-indisponivel' : '' ?>">
+                    <h3><?= $campo['tipo_campo'] ?></h3>
+                    <p><?= $campo['descricao'] ?></p>
+                    <p><strong>Estado:</strong>
+                        <?php if ($campo['estado'] == 'disponivel'): ?>
+                            <span class="badge-disponivel">Disponivel</span>
+                        <?php else: ?>
+                            <span class="badge-indisponivel">Indisponivel</span>
+                        <?php endif; ?>
+                    </p>
+                    <p><strong>Valor/hora:</strong> <?= $campo['valor'] ?>€</p>
+                    <p><strong>Iluminacao noturna:</strong> <?= $campo['custo_iluminacao'] ?>€</p>
+                    <p><strong>Aluguer de material:</strong> <?= $campo['custo_aluguer_material'] ?>€</p>
+                    <?php if ($campo['estado'] == 'disponivel' && isset($_SESSION['user_id'])): ?>
+                        <a href="reservas.php"><button>Reservar</button></a>
+                    <?php elseif ($campo['estado'] == 'manutencao'): ?>
+                        <button disabled>Indisponivel</button>
+                    <?php endif; ?>
+                </div>
             <?php endforeach; ?>
-        </table>
+        </div>
     </div>
 </body>
 
