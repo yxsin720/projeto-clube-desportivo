@@ -50,3 +50,9 @@ CREATE TABLE IF NOT EXISTS pagamentos (
     FOREIGN KEY (id_user) REFERENCES users(id),
     FOREIGN KEY (operador) REFERENCES users(id)
 );
+
+INSERT INTO campos (tipo_campo, estado, valor, descricao, custo_iluminacao, custo_aluguer_material) VALUES
+('Padel Coberto', 'disponivel', 15.00, 'Campo de padel coberto', 5.00, 3.00),
+('Padel Descoberto', 'disponivel', 10.00, 'Campo de padel ao ar livre', 5.00, 3.00),
+('Tenis Terra Batida', 'disponivel', 12.00, 'Campo de tenis em terra batida', 5.00, 2.00),
+('Tenis Rapido', 'disponivel', 12.00, 'Campo de tenis em piso rapido', 5.00, 2.00);
