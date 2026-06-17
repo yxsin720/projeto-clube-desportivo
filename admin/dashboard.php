@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/database.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] != 'gestor' && $_SESSION['user_role'] != 'rececionista')) {
     header('Location: ../login.php');
     exit;
 }

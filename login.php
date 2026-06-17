@@ -15,7 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_nome'] = $user['nome'];
-        header('Location: index.php');
+        $_SESSION['user_role'] = $user['role'];
+
+        if ($user['role'] == 'gestor' || $user['role'] == 'rececionista') {
+            header('Location: admin/dashboard.php');
+        } else {
+            header('Location: index.php');
+        }
         exit;
     } else {
         $erro = 'Email ou password incorretos.';
