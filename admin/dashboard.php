@@ -7,16 +7,16 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] != 'gestor' && $_SES
     exit;
 }
 
+$role = $_SESSION['user_role'];
 $atletas = $pdo->query("SELECT * FROM users WHERE role = 'atleta'")->fetchAll();
 $reservas = $pdo->query("SELECT r.*, c.tipo_campo, u.nome FROM reservas r JOIN campos c ON r.id_campo = c.id JOIN users u ON r.id_user = u.id ORDER BY r.data_hora DESC")->fetchAll();
-$campos = $pdo->query("SELECT * FROM campos")->fetchAll();
 $pagamentos = $pdo->query("SELECT p.*, u.nome as atleta_nome, o.nome as operador_nome FROM pagamentos p JOIN users u ON p.id_user = u.id LEFT JOIN users o ON p.operador = o.id ORDER BY p.data DESC")->fetchAll();
 
 $erro = '';
 $sucesso = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['add_campo'])) {
+    if (isset($_POST['add_campo']) && $role == 'gestor') {
         $tipo = $_POST['tipo_campo'];
         $estado = $_POST['estado'];
         $valor = $_POST['valor'];
@@ -80,12 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <nav>
         <a href="dashboard.php">Dashboard</a>
+        <?php if ($role == 'gestor'): ?>
         <a href="stats.php">Estatisticas</a>
+        <?php endif; ?>
         <a href="../logout.php">Sair</a>
     </nav>
     <div class="container">
         <h2>Painel de Administracao</h2>
 
+        <?php if ($role == 'gestor'): ?>
         <h3>Adicionar Campo</h3>
         <form method="POST">
             <input type="text" name="tipo_campo" placeholder="Tipo de campo" required>
@@ -96,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="number" name="valor" placeholder="Valor/hora (€)" step="0.01" required>
             <button type="submit" name="add_campo">Adicionar Campo</button>
         </form>
+        <?php endif; ?>
 
         <h3>Registar Pagamento</h3>
         <?php if ($erro): ?><p class="erro"><?= $erro ?></p><?php endif; ?>
