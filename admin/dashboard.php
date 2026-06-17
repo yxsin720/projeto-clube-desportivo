@@ -38,6 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: dashboard.php');
         exit;
     }
+
+    if (isset($_POST['cancelar_reserva'])) {
+        $id_reserva = $_POST['id_reserva'];
+        $stmt = $pdo->prepare("UPDATE reservas SET estado = 'cancelada' WHERE id = ?");
+        $stmt->execute([$id_reserva]);
+        header('Location: dashboard.php');
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -117,6 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <form method="POST">
                                 <input type="hidden" name="id_reserva" value="<?= $r['id'] ?>">
                                 <button type="submit" name="checkin">Check-in</button>
+                            </form>
+                            <form method="POST" style="display:inline">
+                                <input type="hidden" name="id_reserva" value="<?= $r['id'] ?>">
+                                <button type="submit" name="cancelar_reserva">Cancelar</button>
                             </form>
                         <?php endif; ?>
                     </td>
