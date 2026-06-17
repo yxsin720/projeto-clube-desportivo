@@ -61,71 +61,74 @@ $minhas_reservas = $minhas_reservas->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Reservas</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<nav>
-    <a href="index.php">Inicio</a>
-    <a href="reservas.php">Reservas</a>
-    <a href="campos.php">Campos</a>
-    <a href="payments.php">Pagamentos</a>
-    <a href="history.php">Historico</a>
-    <a href="logout.php">Logout</a>
-    <a href="about.php">Sobre nos</a>
-</nav>
+    <nav>
+        <a href="index.php">Inicio</a>
+        <a href="reservas.php">Reservas</a>
+        <a href="campos.php">Campos</a>
+        <a href="payments.php">Pagamentos</a>
+        <a href="history.php">Historico</a>
+        <a href="logout.php">Logout</a>
+        <a href="about.php">Sobre nos</a>
+    </nav>
 
-<div class="container">
-    <h2>Efetuar Reserva</h2>
-    <?php if ($erro): ?><p class="erro"><?= $erro ?></p><?php endif; ?>
-    <?php if ($sucesso): ?><p class="sucesso"><?= $sucesso ?></p><?php endif; ?>
+    <div class="container">
+        <h2>Efetuar Reserva</h2>
+        <?php if ($erro): ?><p class="erro"><?= $erro ?></p><?php endif; ?>
+        <?php if ($sucesso): ?><p class="sucesso"><?= $sucesso ?></p><?php endif; ?>
 
-    <form method="POST">
-        <select name="id_campo" required>
-            <option value="">Escolha um campo</option>
-            <?php foreach ($campos as $campo): ?>
-            <option value="<?= $campo['id'] ?>"><?= $campo['tipo_campo'] ?> - <?= $campo['valor'] ?>€/hora</option>
+        <form method="POST">
+            <select name="id_campo" required>
+                <option value="">Escolha um campo</option>
+                <?php foreach ($campos as $campo): ?>
+                    <option value="<?= $campo['id'] ?>"><?= $campo['tipo_campo'] ?> - <?= $campo['valor'] ?>€/hora</option>
+                <?php endforeach; ?>
+            </select>
+            <input type="date" name="data_hora" required>
+            <input type="time" name="hora_inicio" required>
+            <input type="time" name="hora_fim" required>
+            <label><input type="checkbox" name="iluminacao"> Iluminacao noturna</label>
+            <label><input type="checkbox" name="aluguer_material"> Aluguer de material</label>
+            <button type="submit" name="reservar">Reservar</button>
+        </form>
+
+        <h2>As minhas reservas</h2>
+        <p class="aviso">Pode editar ou cancelar ate 24 horas antes do inicio do jogo.</p>
+        <table>
+            <tr>
+                <th>Campo</th>
+                <th>Data</th>
+                <th>Hora Inicio</th>
+                <th>Hora Fim</th>
+                <th>Estado</th>
+                <th>Acao</th>
+            </tr>
+            <?php foreach ($minhas_reservas as $r): ?>
+                <tr>
+                    <td><?= $r['tipo_campo'] ?></td>
+                    <td><?= $r['data_hora'] ?></td>
+                    <td><?= $r['hora_inicio'] ?></td>
+                    <td><?= $r['hora_fim'] ?></td>
+                    <td><?= $r['estado'] ?></td>
+                    <td>
+                        <?php if ($r['estado'] == 'ativa' && (strtotime($r['data_hora'] . ' ' . $r['hora_inicio']) - time()) > 86400): ?>
+                            <form method="POST">
+                                <input type="hidden" name="id_reserva" value="<?= $r['id'] ?>">
+                                <button type="submit" name="cancelar">Cancelar</button>
+                            </form>
+                        <?php endif; ?>
+                    </td>
+                </tr>
             <?php endforeach; ?>
-        </select>
-        <input type="date" name="data_hora" required>
-        <input type="time" name="hora_inicio" required>
-        <input type="time" name="hora_fim" required>
-        <label><input type="checkbox" name="iluminacao"> Iluminacao noturna</label>
-        <label><input type="checkbox" name="aluguer_material"> Aluguer de material</label>
-        <button type="submit" name="reservar">Reservar</button>
-    </form>
-
-    <h2>As minhas reservas</h2>
-    <p class="aviso">Pode editar ou cancelar ate 24 horas antes do inicio do jogo.</p>
-    <table>
-        <tr>
-            <th>Campo</th>
-            <th>Data</th>
-            <th>Hora Inicio</th>
-            <th>Hora Fim</th>
-            <th>Estado</th>
-            <th>Acao</th>
-        </tr>
-        <?php foreach ($minhas_reservas as $r): ?>
-        <tr>
-            <td><?= $r['tipo_campo'] ?></td>
-            <td><?= $r['data_hora'] ?></td>
-            <td><?= $r['hora_inicio'] ?></td>
-            <td><?= $r['hora_fim'] ?></td>
-            <td><?= $r['estado'] ?></td>
-            <td>
-                <?php if ($r['estado'] == 'ativa' && (strtotime($r['data_hora'] . ' ' . $r['hora_inicio']) - time()) > 86400): ?>
-                <form method="POST">
-                    <input type="hidden" name="id_reserva" value="<?= $r['id'] ?>">
-                    <button type="submit" name="cancelar">Cancelar</button>
-                </form>
-                <?php endif; ?>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-</div>
+        </table>
+    </div>
 </body>
+
 </html>

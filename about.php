@@ -1,11 +1,13 @@
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Sobre Nos</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
         <a href="index.php">Inicio</a>
@@ -27,4 +29,5 @@
         <p>Oferecemos campos de qualidade e reservas online para os nossos atletas.</p>
     </div>
 </body>
+
 </html>

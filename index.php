@@ -3,11 +3,13 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Clube Desportivo</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
         <a href="index.php">Inicio</a>
@@ -34,4 +36,5 @@ session_start();
         <?php endif; ?>
     </div>
 </body>
+
 </html>

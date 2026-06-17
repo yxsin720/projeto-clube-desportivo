@@ -24,11 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
         <a href="index.php">Inicio</a>
@@ -46,4 +48,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 </body>
+
 </html>

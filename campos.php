@@ -7,11 +7,13 @@ $campos = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Campos</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
         <a href="index.php">Inicio</a>
@@ -36,13 +38,14 @@ $campos = $stmt->fetchAll();
                 <th>Valor/hora</th>
             </tr>
             <?php foreach ($campos as $campo): ?>
-            <tr>
-                <td><?= $campo['tipo_campo'] ?></td>
-                <td><?= $campo['estado'] ?></td>
-                <td><?= $campo['valor'] ?>€</td>
-            </tr>
+                <tr>
+                    <td><?= $campo['tipo_campo'] ?></td>
+                    <td><?= $campo['estado'] ?></td>
+                    <td><?= $campo['valor'] ?>€</td>
+                </tr>
             <?php endforeach; ?>
         </table>
     </div>
 </body>
+
 </html>

@@ -14,18 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute([$nome, $email, $password]);
         header('Location: login.php');
         exit;
-    } catch(PDOException $e) {
+    } catch (PDOException $e) {
         $erro = 'Email já registado.';
     }
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Registar</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav>
         <a href="index.php">Inicio</a>
@@ -44,4 +46,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 </body>
+
 </html>
