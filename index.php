@@ -25,15 +25,33 @@ session_start();
         <?php endif; ?>
         <a href="about.php">Sobre nos</a>
     </nav>
-    <div class="container">
+    <div class="hero">
         <h1>Bem-vindo ao Clube Desportivo</h1>
-        <p>Reserve o seu campo de ténis ou pádel online.</p>
+        <p>Reserve o seu campo de ténis ou pádel de forma rápida e simples.</p>
         <?php if (!isset($_SESSION['user_id'])): ?>
             <a href="register.php"><button>Registar</button></a>
             <a href="login.php"><button>Login</button></a>
         <?php else: ?>
+            <p>Bem-vindo, <?= $_SESSION['user_nome'] ?>!</p>
             <a href="reservas.php"><button>Fazer Reserva</button></a>
         <?php endif; ?>
+    </div>
+
+    <div class="container">
+        <div class="cards">
+            <div class="card">
+                <h3>Tenis</h3>
+                <p>Campos de terra batida e piso rapido disponiveis para reserva.</p>
+            </div>
+            <div class="card">
+                <h3>Padel</h3>
+                <p>Campos cobertos e descobertos para todos os niveis.</p>
+            </div>
+            <div class="card">
+                <h3>Equipamentos</h3>
+                <p>Aluguer de raquetes e bolas disponivel em todos os campos.</p>
+            </div>
+        </div>
     </div>
 </body>
 
