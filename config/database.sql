@@ -56,3 +56,4 @@ INSERT INTO campos (tipo_campo, estado, valor, descricao, custo_iluminacao, cust
 ('Padel Descoberto', 'disponivel', 10.00, 'Campo de padel ao ar livre', 5.00, 3.00),
 ('Tenis Terra Batida', 'disponivel', 12.00, 'Campo de tenis em terra batida', 5.00, 2.00),
 ('Tenis Rapido', 'disponivel', 12.00, 'Campo de tenis em piso rapido', 5.00, 2.00);
+UPDATE campos SET estado = 'manutencao' WHERE tipo_campo = 'Padel Descoberto';
