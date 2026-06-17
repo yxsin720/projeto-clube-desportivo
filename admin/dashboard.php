@@ -22,6 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: dashboard.php');
         exit;
     }
+
+    if (isset($_POST['checkin'])) {
+        $id_reserva = $_POST['id_reserva'];
+        $stmt = $pdo->prepare("UPDATE reservas SET check_in = 1 WHERE id = ?");
+        $stmt->execute([$id_reserva]);
+        header('Location: dashboard.php');
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -32,49 +40,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <nav>
-        <a href="../index.php">Inicio</a>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="stats.php">Estatisticas</a>
-        <a href="../logout.php">Logout</a>
-    </nav>
-    <div class="container">
-        <h2>Painel de Administracao</h2>
+<nav>
+    <a href="../index.php">Inicio</a>
+    <a href="dashboard.php">Dashboard</a>
+    <a href="stats.php">Estatisticas</a>
+    <a href="../logout.php">Logout</a>
+</nav>
+<div class="container">
+    <h2>Painel de Administracao</h2>
 
-        <h3>Adicionar Campo</h3>
-        <form method="POST">
-            <input type="text" name="tipo_campo" placeholder="Tipo de campo" required>
-            <select name="estado">
-                <option value="disponivel">Disponivel</option>
-                <option value="manutencao">Manutencao</option>
-            </select>
-            <input type="number" name="valor" placeholder="Valor/hora (€)" step="0.01" required>
-            <button type="submit" name="add_campo">Adicionar Campo</button>
-        </form>
+    <h3>Adicionar Campo</h3>
+    <form method="POST">
+        <input type="text" name="tipo_campo" placeholder="Tipo de campo" required>
+        <select name="estado">
+            <option value="disponivel">Disponivel</option>
+            <option value="manutencao">Manutencao</option>
+        </select>
+        <input type="number" name="valor" placeholder="Valor/hora (€)" step="0.01" required>
+        <button type="submit" name="add_campo">Adicionar Campo</button>
+    </form>
 
-        <h3>Atletas</h3>
-        <table>
-            <tr><th>Nome</th><th>Email</th></tr>
-            <?php foreach ($atletas as $a): ?>
-            <tr><td><?= $a['nome'] ?></td><td><?= $a['email'] ?></td></tr>
-            <?php endforeach; ?>
-        </table>
+    <h3>Atletas</h3>
+    <table>
+        <tr><th>Nome</th><th>Email</th></tr>
+        <?php foreach ($atletas as $a): ?>
+        <tr><td><?= $a['nome'] ?></td><td><?= $a['email'] ?></td></tr>
+        <?php endforeach; ?>
+    </table>
 
-        <h3>Reservas</h3>
-        <table>
-            <tr><th>Atleta</th><th>Campo</th><th>Data</th><th>Estado</th></tr>
-            <?php foreach ($reservas as $r): ?>
-            <tr><td><?= $r['nome'] ?></td><td><?= $r['tipo_campo'] ?></td><td><?= $r['data_hora'] ?></td><td><?= $r['estado'] ?></td></tr>
-            <?php endforeach; ?>
-        </table>
+    <h3>Reservas</h3>
+    <table>
+        <tr><th>Atleta</th><th>Campo</th><th>Data</th><th>Estado</th><th>Check-in</th><th>Acao</th></tr>
+        <?php foreach ($reservas as $r): ?>
+        <tr>
+            <td><?= $r['nome'] ?></td>
+            <td><?= $r['tipo_campo'] ?></td>
+            <td><?= $r['data_hora'] ?></td>
+            <td><?= $r['estado'] ?></td>
+            <td><?= $r['check_in'] ? 'Sim' : 'Nao' ?></td>
+            <td>
+                <?php if ($r['estado'] == 'ativa' && !$r['check_in']): ?>
+                <form method="POST">
+                    <input type="hidden" name="id_reserva" value="<?= $r['id'] ?>">
+                    <button type="submit" name="checkin">Check-in</button>
+                </form>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
 
-        <h3>Pagamentos</h3>
-        <table>
-            <tr><th>Atleta</th><th>Montante</th><th>Data</th></tr>
-            <?php foreach ($pagamentos as $p): ?>
-            <tr><td><?= $p['nome'] ?></td><td><?= $p['montante'] ?>€</td><td><?= $p['data'] ?></td></tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
+    <h3>Pagamentos</h3>
+    <table>
+        <tr><th>Atleta</th><th>Montante</th><th>Data</th></tr>
+        <?php foreach ($pagamentos as $p): ?>
+        <tr><td><?= $p['nome'] ?></td><td><?= $p['montante'] ?>€</td><td><?= $p['data'] ?></td></tr>
+        <?php endforeach; ?>
+    </table>
+</div>
 </body>
 </html>
