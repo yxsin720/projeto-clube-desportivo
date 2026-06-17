@@ -42,15 +42,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelar'])) {
     $reserva = $reserva->fetch();
 
     if ($reserva) {
-        $data_reserva = $reserva['data_hora'] . ' ' . $reserva['hora_inicio'];
-        $diferenca = strtotime($data_reserva) - time();
-
+        $diferenca = strtotime($reserva['data_hora'] . ' ' . $reserva['hora_inicio']) - time();
         if ($diferenca > 86400) {
             $stmt = $pdo->prepare("UPDATE reservas SET estado = 'cancelada' WHERE id = ?");
             $stmt->execute([$id_reserva]);
             $sucesso = 'Reserva cancelada com sucesso!';
         } else {
             $erro = 'Nao pode cancelar com menos de 24 horas de antecedencia.';
+        }
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editar'])) {
+    $id_reserva = $_POST['id_reserva'];
+    $data_hora = $_POST['data_hora'];
+    $hora_inicio = $_POST['hora_inicio'];
+    $hora_fim = $_POST['hora_fim'];
+    $iluminacao = isset($_POST['iluminacao']) ? 1 : 0;
+    $aluguer_material = isset($_POST['aluguer_material']) ? 1 : 0;
+
+    $reserva = $pdo->prepare("SELECT * FROM reservas WHERE id = ? AND id_user = ?");
+    $reserva->execute([$id_reserva, $id_user]);
+    $reserva = $reserva->fetch();
+
+    if ($reserva) {
+        $diferenca = strtotime($reserva['data_hora'] . ' ' . $reserva['hora_inicio']) - time();
+        if ($diferenca > 86400) {
+            $stmt = $pdo->prepare("UPDATE reservas SET data_hora = ?, hora_inicio = ?, hora_fim = ?, iluminacao = ?, aluguer_material = ? WHERE id = ?");
+            $stmt->execute([$data_hora, $hora_inicio, $hora_fim, $iluminacao, $aluguer_material, $id_reserva]);
+            $sucesso = 'Reserva atualizada com sucesso!';
+        } else {
+            $erro = 'Nao pode editar com menos de 24 horas de antecedencia.';
         }
     }
 }
@@ -78,7 +100,6 @@ $minhas_reservas = $minhas_reservas->fetchAll();
         <a href="logout.php">Logout</a>
         <a href="about.php">Sobre nos</a>
     </nav>
-
     <div class="container">
         <h2>Efetuar Reserva</h2>
         <?php if ($erro): ?><p class="erro"><?= $erro ?></p><?php endif; ?>
@@ -108,6 +129,8 @@ $minhas_reservas = $minhas_reservas->fetchAll();
                 <th>Hora Inicio</th>
                 <th>Hora Fim</th>
                 <th>Estado</th>
+                <th>Iluminacao</th>
+                <th>Material</th>
                 <th>Acao</th>
             </tr>
             <?php foreach ($minhas_reservas as $r): ?>
@@ -117,10 +140,18 @@ $minhas_reservas = $minhas_reservas->fetchAll();
                     <td><?= $r['hora_inicio'] ?></td>
                     <td><?= $r['hora_fim'] ?></td>
                     <td><?= $r['estado'] ?></td>
+                    <td><?= $r['iluminacao'] ? 'Sim' : 'Nao' ?></td>
+                    <td><?= $r['aluguer_material'] ? 'Sim' : 'Nao' ?></td>
                     <td>
                         <?php if ($r['estado'] == 'ativa' && (strtotime($r['data_hora'] . ' ' . $r['hora_inicio']) - time()) > 86400): ?>
                             <form method="POST">
                                 <input type="hidden" name="id_reserva" value="<?= $r['id'] ?>">
+                                <input type="date" name="data_hora" value="<?= $r['data_hora'] ?>" required>
+                                <input type="time" name="hora_inicio" value="<?= $r['hora_inicio'] ?>" required>
+                                <input type="time" name="hora_fim" value="<?= $r['hora_fim'] ?>" required>
+                                <label><input type="checkbox" name="iluminacao" <?= $r['iluminacao'] ? 'checked' : '' ?>> Iluminacao</label>
+                                <label><input type="checkbox" name="aluguer_material" <?= $r['aluguer_material'] ? 'checked' : '' ?>> Material</label>
+                                <button type="submit" name="editar">Editar</button>
                                 <button type="submit" name="cancelar">Cancelar</button>
                             </form>
                         <?php endif; ?>
