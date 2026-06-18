@@ -35,9 +35,9 @@ Aplicacao web para a gestao integral de um clube desportivo de tenis e padel. Pe
 
 ## Credenciais de Teste
 
-### Gestor (acesso total)
-- Email: gestor@clube.pt
-- Password: password
+### Admin (acesso total)
+- Email: admin@clube.pt
+- Password: admin123
 - Permissoes: adicionar campos, gerir atletas, gerir reservas, registar pagamentos, ver estatisticas
 
 ### Rececionista (acesso operacional)
